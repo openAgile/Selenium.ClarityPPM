@@ -67,7 +67,7 @@ public class Selenium {
 		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("name")));
 
-		element.sendKeys("My V1 Project");
+		element.sendKeys("My V1 Projectnw");
 
 		element = driver.findElement(By.name("unique_code"));
 
@@ -108,9 +108,13 @@ public class Selenium {
 
 		element.sendKeys("VersionOne");
 
-	    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
+		element = driver.findElement(By
+				.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button"));
+
+		element.click();
+	    //driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
 	    // click | css=td.ppm_umenu_section > a[title="Projects"] |
-	    driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
+	   // driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
 
 
 		// element = (new WebDriverWait(driver, 10))
@@ -126,6 +130,7 @@ public class Selenium {
 		// myNewButton.click();
 	}
 
+	
 	public static void closeBrowser() {
 		// Close the browser
 		driver.quit();
@@ -149,7 +154,7 @@ public class Selenium {
 
 
 		// createa a new story
-		createAStory();
+		//createAStory();
 
 		// close browser
 		// closeBrowser();
