@@ -52,7 +52,7 @@ public class Selenium {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static void createProject() {
 
@@ -85,7 +85,7 @@ public class Selenium {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static void createAStory() {
 
@@ -96,17 +96,22 @@ public class Selenium {
 
 		element.click();
 
-		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By
 						.cssSelector("h1[title*='Projects']")));
 
 		driver.get(URL
 				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id=5000028");
 
-		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("remote_api_code")));
 
 		element.sendKeys("VersionOne");
+
+	    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
+	    // click | css=td.ppm_umenu_section > a[title="Projects"] |
+	    driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
+
 
 		// element = (new WebDriverWait(driver, 10))
 		// .until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[onclick*='nmc.addSchedulerProperties']")));
@@ -138,8 +143,10 @@ public class Selenium {
 
 		// createa a new project
 		createProject();
+
 		// createa a new project
 		createAStory();
+
 
 		// createa a new story
 		createAStory();
@@ -148,5 +155,56 @@ public class Selenium {
 		// closeBrowser();
 
 	}
+
+
+//    // open | /niku/nu |
+//    driver.get(baseUrl + "/niku/nu");
+//    // type | id=ppm_login_username | v1user
+//    driver.findElement(By.id("ppm_login_username")).clear();
+//    driver.findElement(By.id("ppm_login_username")).sendKeys("v1user");
+//    // type | id=ppm_login_password | v1user
+//    driver.findElement(By.id("ppm_login_password")).clear();
+//    driver.findElement(By.id("ppm_login_password")).sendKeys("v1user");
+//    // click | id=ppm_login_button |
+//    driver.findElement(By.id("ppm_login_button")).click();
+//    // click | link=Projects |
+//    driver.findElement(By.linkText("Projects")).click();
+//    // click | xpath=(//button[@type='button'])[6] |
+//    driver.findElement(By.xpath("(//button[@type='button'])[6]")).click();
+//    // type | id=d8952e21 | newProject
+//    driver.findElement(By.id("d8952e21")).clear();
+//    driver.findElement(By.id("d8952e21")).sendKeys("newProject");
+//    // type | id=d8952e28 | newId
+//    driver.findElement(By.id("d8952e28")).clear();
+//    driver.findElement(By.id("d8952e28")).sendKeys("newId");
+//    // click | css=#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button. |
+//    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.")).click();
+//    // click | id=d9093e330 |
+//    driver.findElement(By.id("d9093e330")).click();
+//    // click | xpath=(//button[@type='button'])[5] |
+//    driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
+//    // click | link=Reports and Jobs |
+//    driver.findElement(By.linkText("Reports and Jobs")).click();
+//    // click | xpath=(//button[@type='button'])[2] |
+//    driver.findElement(By.xpath("(//button[@type='button'])[2]")).click();
+//    // click | link=Jobs |
+//    driver.findElement(By.linkText("Jobs")).click();
+//    // click | id=nextPageButton |
+//    driver.findElement(By.id("nextPageButton")).click();
+//    // click | link=Remote Project Sync |
+//    driver.findElement(By.linkText("Remote Project Sync")).click();
+//    // select | id=d9753e117 | label=VersionOne
+//    new Select(driver.findElement(By.id("d9753e117"))).selectByVisibleText("VersionOne");
+//    // click | css=#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button |
+//    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
+//    // click | css=td.ppm_umenu_section > a[title="Projects"] |
+//    driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
+//    // click | link=newProject |
+//    driver.findElement(By.linkText("newProject")).click();
+//    // click | link=Properties |
+//    driver.findElement(By.linkText("Properties")).click();
+//    // click | link=VersionOne |
+//    driver.findElement(By.linkText("VersionOne")).click();
+
 
 }
