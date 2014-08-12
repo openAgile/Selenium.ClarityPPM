@@ -8,7 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Selenium {
+public class CreateProjectTest {
 
 	// Create a new instance of the Firefox driver
 	public static WebDriver driver;
@@ -54,7 +54,7 @@ public class Selenium {
 	/**
 	 *
 	 */
-	private static void createProject() {
+	public static void createProject() {
 
 		WebElement myHomeMenu, element;
 
@@ -73,9 +73,13 @@ public class Selenium {
 
 		element.sendKeys("My_V1_ID" + DateTime.now().getMillis());
 
-		element = driver.findElement(By
-				.cssSelector("button[onclick*='retmode=properties']"));
 
+		element = (new WebDriverWait(driver, 30)).until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("button[onclick*='retmode=properties']")));
+
+//		element = driver.findElement(By
+//				.cssSelector("button[onclick*='retmode=properties']"));
+//
 		element.click();
 
 		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
@@ -87,7 +91,7 @@ public class Selenium {
 	/**
 	 *
 	 */
-	private static void createAStory() {
+	public static void createAStory() {
 
 		WebElement element;
 
@@ -130,7 +134,7 @@ public class Selenium {
 		// myNewButton.click();
 	}
 
-	
+
 	public static void closeBrowser() {
 		// Close the browser
 		driver.quit();
