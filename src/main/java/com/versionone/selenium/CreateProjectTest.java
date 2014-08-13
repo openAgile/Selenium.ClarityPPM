@@ -52,9 +52,9 @@ public class CreateProjectTest {
 	}
 
 	/**
-	 *
+	 *returns clarity project id 5 million number
 	 */
-	public static void createProject() {
+	public static int createProject() {
 
 		WebElement myHomeMenu, element;
 
@@ -81,11 +81,15 @@ public class CreateProjectTest {
 //				.cssSelector("button[onclick*='retmode=properties']"));
 //
 		element.click();
+		
+		
+	
 
 		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("agile_linked")));
-
+		int CID = Integer.parseInt(driver.getCurrentUrl().replaceFirst(URL, "").substring(44));
 		element.click();
+		return CID;
 	}
 
 	/**
@@ -150,13 +154,16 @@ public class CreateProjectTest {
 		// Login app
 		loginApp();
 
-		// createa a new project
-		createProject();
+		
+		// create a new project
+		int CID = createProject();
 
 		// createa a new project
 		createAStory();
 
-
+		//todo - get the versionone ie-12345 id from clarity - in order to to that:
+		//todo - get clarity projectid in order to use the number for direct link to project page where the E id is 
+			//other option is put exact name in filter and clickresults
 		// createa a new story
 		//createAStory();
 
