@@ -1,5 +1,7 @@
 package com.versionone.selenium;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -89,24 +91,26 @@ public class CreateProjectTest {
 				.presenceOfElementLocated(By.name("agile_linked")));
 		int CID = Integer.parseInt(driver.getCurrentUrl().replaceFirst(URL, "").substring(44));
 		element.click();
+		
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("button[onclick*='action=projmgr.projectList']")));
+
+
+		element.click();
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("h1[title*='Projects']")));
 		return CID;
 	}
 
 	/**
 	 *
 	 */
-	public static void createAStory() {
+	public static String createAStory(int CID) {
 
 		WebElement element;
+		int Cid = CID;
 
-		element = driver.findElement(By
-				.cssSelector("button[onclick*='action=projmgr.projectList']"));
 
-		element.click();
-
-		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
-				.presenceOfElementLocated(By
-						.cssSelector("h1[title*='Projects']")));
 
 		driver.get(URL
 				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id=5000028");
@@ -120,6 +124,26 @@ public class CreateProjectTest {
 				.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button"));
 
 		element.click();
+		
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.cssSelector("h1[title*='Scheduled Jobs']")));
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.get(URL
+				+ "niku/nu#action:projmgr.projectProperties&odf_view=project.versionone&id=" + Cid + "&odf_pk=" + Cid);
+		
+		//element = (new WebDriverWait(driver, 20)).until(ExpectedConditions.presenceOfElementLocated(By.className("ppm_read_only_value")));
+		
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//div[4]/table/tbody/tr/td/table/tbody/tr/td[2]/span")));
+		String Eid = element.getText().toString();
+		
+		
+		return Eid;
+		
 	    //driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
 	    // click | css=td.ppm_umenu_section > a[title="Projects"] |
 	   // driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
@@ -144,8 +168,8 @@ public class CreateProjectTest {
 		driver.quit();
 
 	}
-
-	public static void main(String[] args) {
+	@Test
+	public  void main() {
 
 		// Notice that the remainder of the code relies on the interface,
 		// not the implementation.
@@ -157,10 +181,11 @@ public class CreateProjectTest {
 		
 		// create a new project
 		int CID = createProject();
-
-		// createa a new project
-		createAStory();
-
+		//int CID = 5001060;
+		// create a new project
+		String EID = createAStory(CID);
+		Assert.assertTrue(EID.matches("E-\\d{5}"));
+		
 		//todo - get the versionone ie-12345 id from clarity - in order to to that:
 		//todo - get clarity projectid in order to use the number for direct link to project page where the E id is 
 			//other option is put exact name in filter and clickresults

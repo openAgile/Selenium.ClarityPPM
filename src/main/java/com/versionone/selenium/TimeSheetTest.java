@@ -26,9 +26,9 @@ public class TimeSheetTest {
 
 		CreateProjectTest.loginApp();
 
-		CreateProjectTest.createProject();
+		int CID = CreateProjectTest.createProject();
 
-		CreateProjectTest.createAStory();
+		CreateProjectTest.createAStory(CID);
 		
 //		RemoteProjectImpl project = createNewProject("WBS TEST CASE 4: Returns single epic workitem");
 //		V1HttpClient httpClient = new V1HttpClient();
