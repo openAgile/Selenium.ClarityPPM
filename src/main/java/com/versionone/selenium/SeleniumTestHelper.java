@@ -10,20 +10,20 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CreateProjectTest {
+public class SeleniumTestHelper {
 
 	// Create a new instance of the Firefox driver
-	public static WebDriver driver;
+		public static WebDriver driver;
 
-	public static final String URL = "http://54.224.15.94:8080/";
+		public static final String URL = "http://54.224.15.94:8080/";
 
-	/*
-	 * settin up action for the test
-	 */
-	public static void setup() {
-		driver = new FirefoxDriver();
-		driver.get(URL + "niku/nu");
-	}
+		/*
+		 * settin up action for the test
+		 */
+		public static void setup() {
+			driver = new FirefoxDriver();
+			driver.get(URL + "niku/nu");
+		}
 
 	/*
 	 * login application
@@ -54,7 +54,7 @@ public class CreateProjectTest {
 	}
 
 	/**
-	 *returns clarity project id 5 million number
+	 *Creates Clarity Project and returns clarity project id 5 million number
 	 */
 	public static int createProject() {
 
@@ -103,9 +103,9 @@ public class CreateProjectTest {
 	}
 
 	/**
-	 *
+	 *Runs Clarity remote project sync and returns V1 EID
 	 */
-	public static String createAStory(int CID) {
+	public static String runProjectSyncJob(int CID) {
 
 		WebElement element;
 		int Cid = CID;
@@ -168,84 +168,4 @@ public class CreateProjectTest {
 		driver.quit();
 
 	}
-	@Test
-	public  void main() {
-
-		// Notice that the remainder of the code relies on the interface,
-		// not the implementation.
-		setup();
-
-		// Login app
-		loginApp();
-
-		
-		// create a new project
-		int CID = createProject();
-		//int CID = 5001060;
-		// create a new project
-		String EID = createAStory(CID);
-		Assert.assertTrue(EID.matches("E-\\d{5}"));
-		
-		//todo - get the versionone ie-12345 id from clarity - in order to to that:
-		//todo - get clarity projectid in order to use the number for direct link to project page where the E id is 
-			//other option is put exact name in filter and clickresults
-		// createa a new story
-		//createAStory();
-
-		// close browser
-		// closeBrowser();
-
-	}
-
-
-//    // open | /niku/nu |
-//    driver.get(baseUrl + "/niku/nu");
-//    // type | id=ppm_login_username | v1user
-//    driver.findElement(By.id("ppm_login_username")).clear();
-//    driver.findElement(By.id("ppm_login_username")).sendKeys("v1user");
-//    // type | id=ppm_login_password | v1user
-//    driver.findElement(By.id("ppm_login_password")).clear();
-//    driver.findElement(By.id("ppm_login_password")).sendKeys("v1user");
-//    // click | id=ppm_login_button |
-//    driver.findElement(By.id("ppm_login_button")).click();
-//    // click | link=Projects |
-//    driver.findElement(By.linkText("Projects")).click();
-//    // click | xpath=(//button[@type='button'])[6] |
-//    driver.findElement(By.xpath("(//button[@type='button'])[6]")).click();
-//    // type | id=d8952e21 | newProject
-//    driver.findElement(By.id("d8952e21")).clear();
-//    driver.findElement(By.id("d8952e21")).sendKeys("newProject");
-//    // type | id=d8952e28 | newId
-//    driver.findElement(By.id("d8952e28")).clear();
-//    driver.findElement(By.id("d8952e28")).sendKeys("newId");
-//    // click | css=#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button. |
-//    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.")).click();
-//    // click | id=d9093e330 |
-//    driver.findElement(By.id("d9093e330")).click();
-//    // click | xpath=(//button[@type='button'])[5] |
-//    driver.findElement(By.xpath("(//button[@type='button'])[5]")).click();
-//    // click | link=Reports and Jobs |
-//    driver.findElement(By.linkText("Reports and Jobs")).click();
-//    // click | xpath=(//button[@type='button'])[2] |
-//    driver.findElement(By.xpath("(//button[@type='button'])[2]")).click();
-//    // click | link=Jobs |
-//    driver.findElement(By.linkText("Jobs")).click();
-//    // click | id=nextPageButton |
-//    driver.findElement(By.id("nextPageButton")).click();
-//    // click | link=Remote Project Sync |
-//    driver.findElement(By.linkText("Remote Project Sync")).click();
-//    // select | id=d9753e117 | label=VersionOne
-//    new Select(driver.findElement(By.id("d9753e117"))).selectByVisibleText("VersionOne");
-//    // click | css=#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button |
-//    driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
-//    // click | css=td.ppm_umenu_section > a[title="Projects"] |
-//    driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
-//    // click | link=newProject |
-//    driver.findElement(By.linkText("newProject")).click();
-//    // click | link=Properties |
-//    driver.findElement(By.linkText("Properties")).click();
-//    // click | link=VersionOne |
-//    driver.findElement(By.linkText("VersionOne")).click();
-
-
 }
