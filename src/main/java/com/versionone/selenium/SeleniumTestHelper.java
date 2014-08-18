@@ -1,7 +1,5 @@
 package com.versionone.selenium;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,21 +8,41 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.ca.clarity.avee.api.InterfaceSettings;
+//import com.versionone.util.V1GrantTool;
+
+
 public class SeleniumTestHelper {
 
 	// Create a new instance of the Firefox driver
 		public static WebDriver driver;
 
 		public static final String URL = "http://54.224.15.94:8080/";
-
+		public static final String OURL = "http://54.224.15.94/versionone";
+		//private static InterfaceSettings settings;
+		
 		/*
 		 * settin up action for the test
 		 */
 		public static void setup() {
+			
 			driver = new FirefoxDriver();
 			driver.get(URL + "niku/nu");
+						
 		}
-
+		/*
+		 * settin up action for the test
+		 */
+//		public static InterfaceSettings setOAuth() throws Exception {
+//		//Inject the OAuth credentials.
+//			
+//				System.out.println("Injecting the OAuth credentials...");
+//				settings = V1GrantTool.createOAuthCredsInterfaceSettings(OURL, "admin", "admin");
+//				System.out.println(settings.toString() + "\n");
+//				return settings;
+//		}
+		
+		
 	/*
 	 * login application
 	 */
@@ -58,9 +76,9 @@ public class SeleniumTestHelper {
 	 */
 	public static int createProject() {
 
-		WebElement myHomeMenu, element;
+		WebElement  element;
 
-		myHomeMenu = (new WebDriverWait(driver, 10)).until(ExpectedConditions
+		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.id("ppm_nav_app_menu")));
 
 		driver.get(URL
@@ -72,7 +90,7 @@ public class SeleniumTestHelper {
 		element.sendKeys("My V1 Projectnw");
 
 		element = driver.findElement(By.name("unique_code"));
-
+		
 		element.sendKeys("My_V1_ID" + DateTime.now().getMillis());
 
 
@@ -102,14 +120,35 @@ public class SeleniumTestHelper {
 		return CID;
 	}
 
+	
+	/**
+	 *Given  Clarity ID (5000000 number) verifies V1 sync and  returns V1 EID
+	 */
+	public static String VerifyEID(int CID) {
+		
+		WebElement element;
+		int Cid = CID;
+		driver.get(URL
+				+ "niku/nu#action:projmgr.projectProperties&odf_view=project.versionone&id=" + Cid + "&odf_pk=" + Cid);
+		
+		//element = (new WebDriverWait(driver, 20)).until(ExpectedConditions.presenceOfElementLocated(By.className("ppm_read_only_value")));
+		
+		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
+				.presenceOfElementLocated(By.xpath("//div[4]/table/tbody/tr/td/table/tbody/tr/td[2]/span")));
+		String Eid = element.getText().toString();
+		
+		
+		return Eid;
+	
+	}
+	
+	
 	/**
 	 *Runs Clarity remote project sync and returns V1 EID
 	 */
-	public static String runProjectSyncJob(int CID) {
+	public static void runProjectSyncJob() {
 
 		WebElement element;
-		int Cid = CID;
-
 
 
 		driver.get(URL
@@ -132,17 +171,7 @@ public class SeleniumTestHelper {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		driver.get(URL
-				+ "niku/nu#action:projmgr.projectProperties&odf_view=project.versionone&id=" + Cid + "&odf_pk=" + Cid);
 		
-		//element = (new WebDriverWait(driver, 20)).until(ExpectedConditions.presenceOfElementLocated(By.className("ppm_read_only_value")));
-		
-		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
-				.presenceOfElementLocated(By.xpath("//div[4]/table/tbody/tr/td/table/tbody/tr/td[2]/span")));
-		String Eid = element.getText().toString();
-		
-		
-		return Eid;
 		
 	    //driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
 	    // click | css=td.ppm_umenu_section > a[title="Projects"] |

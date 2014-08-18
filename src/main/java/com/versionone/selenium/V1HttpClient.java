@@ -14,7 +14,7 @@ import org.apache.http.util.EntityUtils;
 
 public class V1HttpClient {
 	
-	private static final String USER_AGENT = "clarity-versionone-connector/1.0";
+	private static final String USER_AGENT = "ClarityOne/1.0";
 	
 	public static String executePostQuery(String url, String body, String contentType) throws ClientProtocolException, IOException {
 		
