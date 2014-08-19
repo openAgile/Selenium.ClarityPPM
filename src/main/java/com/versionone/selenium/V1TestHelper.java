@@ -56,6 +56,17 @@ public class V1TestHelper {
 		return parseGetAssetOIDResponse(response);
 	}
 	
+	public static String getAssetOIDByName(String instance, String assetType, String assetName) throws ClientProtocolException, IOException, ParseException {
+		String url = instance + "/query.v1";
+		String query = "" +
+				"from: " + assetType + "\r\n" + 
+				"where:\r\n" + 
+				"  Name: " + assetName;
+		
+		String response = V1HttpClient.executePostQuery(url, query, "admin", "admin", "application/json");
+		return parseGetAssetOIDResponse(response);
+	}
+	
 	public static String parseGetAssetOIDResponse(String response) throws org.json.simple.parser.ParseException {
 
 		JSONParser parser = new JSONParser();
@@ -87,12 +98,12 @@ public class V1TestHelper {
 		return parseAssetOID(response);
 	}
 	
-	public static String createActual(String instance, String assetOID, String date, String value) throws UnsupportedEncodingException, IOException, JDOMException {
-		String url = "/rest-1.v1/Data/Actual";
+	public static String createActual(String instance, String assetOID, String memberOID, String date, String value) throws UnsupportedEncodingException, IOException, JDOMException {
+		String url = instance + "/rest-1.v1/Data/Actual";
 		String xml = "" +
 					 "<Asset>\r\n" + 
 					 "    <Attribute name=\"Date\" act=\"set\">" + date + "</Attribute>\r\n" + 
-					 "    <Relation name=\"Member\" act=\"set\"><Asset idref=\"Member:20\"/></Relation>\r\n" + 
+					 "    <Relation name=\"Member\" act=\"set\"><Asset idref=\"" + memberOID + "\"/></Relation>\r\n" + 
 					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
 					 "    <Attribute name=\"Value\" act=\"set\">" + value + "</Attribute>\r\n" + 
 					 "    <Relation name=\"Workitem\" act=\"set\"><Asset idref=\"" + assetOID + "\"/></Relation>\r\n" + 

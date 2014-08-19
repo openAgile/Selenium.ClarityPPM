@@ -1,5 +1,7 @@
 package com.versionone.selenium;
 
+import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -145,14 +147,25 @@ public class SeleniumTestHelper {
 	
 	/**
 	 *Runs Clarity remote project sync and returns V1 EID
+	 *accepts job type  parameters:
+	 *"project" for remote project sync
+	 *"timesheet" for remote timesheet sync
 	 */
-	public static void runProjectSyncJob() {
+	public static void runProjectSyncJob(String type) {
 
 		WebElement element;
-
-
+		String id=type;
+		long delay=8000;
+		if (type.toLowerCase() == "project"){
+			id="5000028";
+			delay = 10000;
+			}			
+		else if (type.toLowerCase() == "timesheet"){
+			id = "5000029";
+			delay = 15000;
+		}
 		driver.get(URL
-				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id=5000028");
+				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id="+id);
 
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("remote_api_code")));
@@ -167,28 +180,13 @@ public class SeleniumTestHelper {
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("h1[title*='Scheduled Jobs']")));
 		try {
-			Thread.sleep(6000);
+			Thread.sleep(delay);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
 		
-	    //driver.findElement(By.cssSelector("#ppm_workspace_bb > div.ppm_button_bar > button.ppm_button.button")).click();
-	    // click | css=td.ppm_umenu_section > a[title="Projects"] |
-	   // driver.findElement(By.cssSelector("td.ppm_umenu_section > a[title=\"Projects\"]")).click();
-
-
-		// element = (new WebDriverWait(driver, 10))
-		// .until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[onclick*='nmc.addSchedulerProperties']")));
-
-		// element.click();
-
-		// element = (new WebDriverWait(driver, 10))
-		// .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("h1[title*='Jobs: Scheduled Jobs']")));
-
-		// WebElement myNewButton = (new WebDriverWait(driver, 10))
-		// .until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("New")));
-		// myNewButton.click();
+	
 	}
 
 
