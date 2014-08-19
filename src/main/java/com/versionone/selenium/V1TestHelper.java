@@ -2,6 +2,7 @@ package com.versionone.selenium;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.jdom.Document;
@@ -86,6 +87,34 @@ public class V1TestHelper {
 		return parseAssetOID(response);
 	}
 	
+	public static String createActual(String instance, String assetOID, String date, String value) throws UnsupportedEncodingException, IOException, JDOMException {
+		String url = "/rest-1.v1/Data/Actual";
+		String xml = "" +
+					 "<Asset>\r\n" + 
+					 "    <Attribute name=\"Date\" act=\"set\">" + date + "</Attribute>\r\n" + 
+					 "    <Relation name=\"Member\" act=\"set\"><Asset idref=\"Member:20\"/></Relation>\r\n" + 
+					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
+					 "    <Attribute name=\"Value\" act=\"set\">" + value + "</Attribute>\r\n" + 
+					 "    <Relation name=\"Workitem\" act=\"set\"><Asset idref=\"" + assetOID + "\"/></Relation>\r\n" + 
+					 "</Asset>";
+		String response = V1HttpClient.executePostQuery(url, xml, "admin", "admin", "application/xml");
+		return parseAssetOID(response);
+	}
+	
+//	public static String createActual(V1OAuthHttpClient httpClient, String assetOID, String date, String value) throws UnsupportedEncodingException, OAuthSystemException, OAuthProblemException, IOException, V1Exception, JDOMException {
+//		String url = "/rest-1.v1/Data/Actual";
+//		String xml = "" +
+//					 "<Asset>\r\n" + 
+//					 "    <Attribute name=\"Date\" act=\"set\">" + date + "</Attribute>\r\n" + 
+//					 "    <Relation name=\"Member\" act=\"set\"><Asset idref=\"Member:20\"/></Relation>\r\n" + 
+//					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
+//					 "    <Attribute name=\"Value\" act=\"set\">" + value + "</Attribute>\r\n" + 
+//					 "    <Relation name=\"Workitem\" act=\"set\"><Asset idref=\"" + assetOID + "\"/></Relation>\r\n" + 
+//					 "</Asset>";
+//		String response = httpClient.executeQuery(url, xml);
+//		return parseAssetOID(response);
+//	}
+//	
 //	public static String updateChildEpic(V1OAuthHttpClient httpClient, String name, String assetOID) throws UnsupportedEncodingException, OAuthSystemException, OAuthProblemException, IOException, V1Exception, JDOMException {
 //		String url = "/rest-1.v1/Data/Epic/" + getAssetOIDNumber(assetOID);
 //		String xml = "" +
@@ -106,17 +135,17 @@ public class V1TestHelper {
 //		return parseAssetOID(response);
 //	}
 //
-//	public static String createChildStory(V1OAuthHttpClient httpClient, String name, String parentOID) throws UnsupportedEncodingException, OAuthSystemException, OAuthProblemException, IOException, V1Exception, JDOMException {
-//		String url = "/rest-1.v1/Data/Story";
-//		String xml = "" +
-//					 "<Asset>\r\n" + 
-//					 "    <Attribute name=\"Name\" act=\"set\">" + name + "</Attribute>\r\n" + 
-//					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
-//					 "    <Relation name=\"Super\" act=\"set\"><Asset idref=\"" + parentOID + "\"/></Relation>\r\n" + 
-//					 "</Asset>";
-//		String response = httpClient.executeQuery(url, xml);
-//		return parseAssetOID(response);
-//	}
+	public static String createChildStory(String instance, String name, String parentOID) throws UnsupportedEncodingException, IOException, JDOMException {
+		String url = instance + "/rest-1.v1/Data/Story";
+		String xml = "" +
+					 "<Asset>\r\n" + 
+					 "    <Attribute name=\"Name\" act=\"set\">" + name + "</Attribute>\r\n" + 
+					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
+					 "    <Relation name=\"Super\" act=\"set\"><Asset idref=\"" + parentOID + "\"/></Relation>\r\n" + 
+					 "</Asset>";
+		String response = V1HttpClient.executePostQuery(url, xml, "admin", "admin", "application/xml");
+		return parseAssetOID(response);
+	}
 //	
 //	public static String createChildDefect(V1OAuthHttpClient httpClient, String name, String parentOID) throws UnsupportedEncodingException, OAuthSystemException, OAuthProblemException, IOException, V1Exception, JDOMException {
 //		String url = "/rest-1.v1/Data/Defect";
@@ -182,18 +211,6 @@ public class V1TestHelper {
 //		return parseAssetOID(response);
 //	}
 //	
-//	public static String createActual(V1OAuthHttpClient httpClient, String assetOID, String date, String value) throws UnsupportedEncodingException, OAuthSystemException, OAuthProblemException, IOException, V1Exception, JDOMException {
-//		String url = "/rest-1.v1/Data/Actual";
-//		String xml = "" +
-//					 "<Asset>\r\n" + 
-//					 "    <Attribute name=\"Date\" act=\"set\">" + date + "</Attribute>\r\n" + 
-//					 "    <Relation name=\"Member\" act=\"set\"><Asset idref=\"Member:20\"/></Relation>\r\n" + 
-//					 "    <Relation name=\"Scope\" act=\"set\"><Asset idref=\"Scope:0\"/></Relation>\r\n" + 
-//					 "    <Attribute name=\"Value\" act=\"set\">" + value + "</Attribute>\r\n" + 
-//					 "    <Relation name=\"Workitem\" act=\"set\"><Asset idref=\"" + assetOID + "\"/></Relation>\r\n" + 
-//					 "</Asset>";
-//		String response = httpClient.executeQuery(url, xml);
-//		return parseAssetOID(response);
-//	}
+
 	
 }
