@@ -17,10 +17,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class SeleniumTests {
 	
 
-	//private V1OAuthHttpClient httpClient;
+	
 
 
-	@Ignore
+	//@Ignore
 	@Test
 	public  void  TestProjectSetup() throws Exception {
 
@@ -42,6 +42,7 @@ public class SeleniumTests {
 				// create a new project
 				SeleniumTestHelper.runProjectSyncJob("project");
 				String EID = SeleniumTestHelper.VerifyEID(CID);
+				System.out.println("Parent V1 EID: " + EID + ", Parent Clarity ID: " + CID );
 				Assert.assertTrue(EID.matches("E-\\d{5}"));
 				
 				// close browser
@@ -49,7 +50,7 @@ public class SeleniumTests {
 
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public  void  TestWBS() throws Exception {
 
@@ -89,6 +90,7 @@ public class SeleniumTests {
 		
 		element = (new WebDriverWait(SeleniumTestHelper.driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.id("projmgr.taskProperties")));
+		System.out.println("Parent V1 EID: " + EID + ", Parent Clarity ID: " + CID + ", V1 story Asset ID: " + OID);	
 		
 		//assert there is a link element titled "test child epic" veryfying successful sync of child item back to clarity
 		Assert.assertTrue(SeleniumTestHelper.driver.findElements(By.cssSelector("a[title*='"+childWorkitemName+"']")).size()>0);
