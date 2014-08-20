@@ -1,5 +1,7 @@
 package com.versionone.selenium;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
@@ -72,7 +74,13 @@ public class SeleniumTestHelper {
 		loginButton.click();
 
 	}
-
+	/**
+	 *Mocks Clarity Project and returns clarity project id 5 million number given
+	 */
+	public static int createProject(int CID) {
+		return CID;
+		
+	}
 	/**
 	 *Creates Clarity Project and returns clarity project id 5 million number
 	 */
@@ -143,14 +151,13 @@ public class SeleniumTestHelper {
 		return Eid;
 	
 	}
-	
-	
 	/**
-	 *Runs Clarity remote project sync and returns V1 EID
+	 *mock for Clarity remote project sync and returns V1 EID
 	 *accepts job type  parameters:
 	 *"project" for remote project sync
 	 *"timesheet" for remote timesheet sync
 	 */
+
 	public static void runProjectSyncJob(String type) {
 
 		WebElement element;
@@ -164,6 +171,7 @@ public class SeleniumTestHelper {
 			id = "5000029";
 			delay = 15000;
 		}
+
 		driver.get(URL
 				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id="+id);
 
@@ -184,12 +192,59 @@ public class SeleniumTestHelper {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		
-	
+			
 	}
 
+	/**
+	 *Gets total hours for clarity user for this weeks timesheet
+	 *accepts resource name  parameter, defaults to "Agile, Andre" if none given
+	 * @throws ParseException 
+	 */
+	public static float getResourceHours(String name) throws ParseException {
+		
+		WebElement element;
+		if (name==null||name=="")
+			name = "Agile, Andre";
+		Date todayDate = V1DateParser.getShortDateFromStringWithTime(DateTime.now().toString());
+		SeleniumTestHelper.driver
+				.get(SeleniumTestHelper.URL
+						+ "niku/nu#action:timeadmin.timesheetBrowser&sortColumn=FULL_NAME&sortDirection=asc&filter_collapsed=false&ff_from_date="
+						+ V1DateParser.getShortDateStringFromDate(todayDate)
+						+ "&ff_to_date="
+						+ V1DateParser.getShortDateStringFromDate(todayDate));
 
+		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By
+						.cssSelector("input[class='radio'][value='userdefined']")));
+
+		element.click();
+
+		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By
+						.cssSelector("input[name='ff_res_name']")));
+
+		element.sendKeys(name);
+
+		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("Button[name='applyFilter']")));
+
+		element.click();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("td[column*='14']")));
+
+		float numHours = Float.valueOf(element.getText());
+		return numHours;
+		
+	}
+	
+	public static float getResourceHours() throws ParseException {
+		return getResourceHours("Agile, Andre");
+	}
 	public static void closeBrowser() {
 		// Close the browser
 		driver.quit();

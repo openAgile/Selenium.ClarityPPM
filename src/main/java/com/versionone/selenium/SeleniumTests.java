@@ -100,24 +100,25 @@ public class SeleniumTests {
 	//@Ignore
 	@Test
 	public  void TestTimesheet() throws Exception {
-
-		
+		WebElement element;
+		float workHours = 4;
 		SeleniumTestHelper.setup();
 
 		// Login app
 		SeleniumTestHelper.loginApp();
 
 		// create a new project
-		int CID = SeleniumTestHelper.createProject();
+			int CID = SeleniumTestHelper.createProject();
 		
 		// create a new project and get IDs
 		SeleniumTestHelper.runProjectSyncJob("project");
+
 		
 		//open project team page and add andre agile
 		SeleniumTestHelper.driver.get(SeleniumTestHelper.URL
 				+ "niku/nu#action:projmgr.roster&id=" + CID);
 				
-		WebElement element = (new WebDriverWait(SeleniumTestHelper.driver, 10)).until(ExpectedConditions
+		element = (new WebDriverWait(SeleniumTestHelper.driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("button[onclick*='projmgr.resourceObjectSelectionList']")));
 		
 		element.click();
@@ -139,14 +140,24 @@ public class SeleniumTests {
 				.presenceOfElementLocated(By.cssSelector("button[onclick*='npt.gridUpdate']")));
 		
 		element.click();
+		//get the number of hours resource (andre) worked
+		String TURL = SeleniumTestHelper.driver.getCurrentUrl();
+		float numHours = SeleniumTestHelper.getResourceHours();
+		SeleniumTestHelper.driver.get(TURL);
 		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		String EID =  SeleniumTestHelper.VerifyEID(CID);
-		String OID = V1TestHelper.getAssetOID(SeleniumTestHelper.OURL, "Epic", EID);
+		String POID = V1TestHelper.getAssetOID(SeleniumTestHelper.OURL, "Epic", EID);
 		
 		//create child epic and sync it
 		String childWorkitemName = "Test Child Story";
-		OID = V1TestHelper.createChildStory(SeleniumTestHelper.OURL, childWorkitemName, OID);
+		String OID = V1TestHelper.createChildStory(SeleniumTestHelper.OURL, childWorkitemName, POID);
 		SeleniumTestHelper.runProjectSyncJob("project");
+
 		
 		//open project task page and show all to see a;; tasks
 		SeleniumTestHelper.driver.get(SeleniumTestHelper.URL
@@ -172,25 +183,13 @@ public class SeleniumTests {
 		String memberOID = V1TestHelper.getAssetOIDByName(SeleniumTestHelper.OURL, "Member", "Andre Agile");
 
 		Date todayDate = V1DateParser.getShortDateFromStringWithTime(DateTime.now().toString());
-		 V1TestHelper.createActual(SeleniumTestHelper.OURL, OID, memberOID, V1DateParser.getShortDateStringFromDate(todayDate), "4");
+		 V1TestHelper.createActual(SeleniumTestHelper.OURL, OID, memberOID, V1DateParser.getShortDateStringFromDate(todayDate), Float.toString(workHours));
 		 SeleniumTestHelper.runProjectSyncJob("timesheet");
 		 
-			SeleniumTestHelper.driver.get(SeleniumTestHelper.URL
-					+ "niku/nu#action:timeadmin.timesheetBrowser&sortColumn=FULL_NAME&sortDirection=asc&filter_collapsed=false&ff_from_date=" + V1DateParser.getShortDateStringFromDate(todayDate) +"&ff_to_date="+ V1DateParser.getShortDateStringFromDate(todayDate));
-
-			//TODO not working
-			element = (new WebDriverWait(SeleniumTestHelper.driver, 10)).until(ExpectedConditions
-					.presenceOfElementLocated(By.cssSelector("input[class='radio'][name='ff_date_type']")));
-			
-			element.click();
-			
-			element = (new WebDriverWait(SeleniumTestHelper.driver, 10)).until(ExpectedConditions
-					.presenceOfElementLocated(By.cssSelector("button[name='applyFilter']")));
-			
-			element.click();
-			
+		 float finalHours = SeleniumTestHelper.getResourceHours();
+		System.out.println("Parent V1 EID: " + EID + ", Parent V! AssetID: " + POID + ", Parent Clarity ID: " + CID + ", V1 story Asset ID: " + OID + ", Andres old hours: " + numHours + ", Andres new hours: " + finalHours);	
 		 //TODO find the best way to verify how many hours -  one option is get text from cell before actual and assert  preactual+actual = postactual
-		 Assert.assertTrue(SeleniumTestHelper.driver.findElements(By.cssSelector("td[column='14'][text='4']")).size()>0);
+		 Assert.assertTrue("params: " + finalHours +", "+ numHours +", "+ workHours ,finalHours == numHours + workHours);
 		 
 		
 	}
