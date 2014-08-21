@@ -21,12 +21,13 @@ public class SeleniumTestHelper {
 	// Create a new instance of the Firefox driver
 		public static WebDriver driver;
 
-		public static final String URL = "http://54.224.15.94:8080/";
-		public static final String OURL = "http://54.224.15.94/versionone";
+		public static final String baseURL =  "http://54.224.15.94";
+		public static final String URL = baseURL +":8080/";
+		public static final String OURL = baseURL +"/versionone";
 		//private static InterfaceSettings settings;
 		
 		/*
-		 * settin up action for the test
+		 * Setting up action for the test
 		 */
 		public static void setup() {
 			
@@ -34,17 +35,6 @@ public class SeleniumTestHelper {
 			driver.get(URL + "niku/nu");
 						
 		}
-		/*
-		 * settin up action for the test
-		 */
-//		public static InterfaceSettings setOAuth() throws Exception {
-//		//Inject the OAuth credentials.
-//			
-//				System.out.println("Injecting the OAuth credentials...");
-//				settings = V1GrantTool.createOAuthCredsInterfaceSettings(OURL, "admin", "admin");
-//				System.out.println(settings.toString() + "\n");
-//				return settings;
-//		}
 		
 		
 	/*
@@ -245,6 +235,46 @@ public class SeleniumTestHelper {
 	public static float getResourceHours() throws ParseException {
 		return getResourceHours("Agile, Andre");
 	}
+	
+	
+	/**
+	 * open project team page and add andre agile
+	 */
+	public static void AddAndre(int CID) throws ParseException {
+		WebElement element;
+	
+	SeleniumTestHelper.driver.get(SeleniumTestHelper.URL + "niku/nu#action:projmgr.roster&id=" + CID);
+
+	element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+			.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("button[onclick*='projmgr.resourceObjectSelectionList']")));
+
+	element.click();
+
+	element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+			.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input[title*='Agile, Andre']")));
+
+	element.click();
+
+	element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+			.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("button[onclick*='union.closeAndRefreshParent']")));
+
+	element.click();
+
+	element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+			.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("a[title*='Agile, Andre']")));
+
+	// save addition
+	element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
+			.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("button[onclick*='npt.gridUpdate']")));
+
+	element.click();
+	try {
+		Thread.sleep(2000);
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+	}
+	
 	public static void closeBrowser() {
 		// Close the browser
 		driver.quit();
