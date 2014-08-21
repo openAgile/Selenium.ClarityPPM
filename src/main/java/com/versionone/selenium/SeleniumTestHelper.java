@@ -8,7 +8,10 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -20,18 +23,32 @@ public class SeleniumTestHelper {
 
 	// Create a new instance of the Firefox driver
 		public static WebDriver driver;
-
+		
+		//need to change IP to fit box being tested
 		public static final String baseURL =  "http://54.224.15.94";
+		//clarity url (if on same machine)
 		public static final String URL = baseURL +":8080/";
+		//versionone url (if on same machine)
 		public static final String OURL = baseURL +"/versionone";
-		//private static InterfaceSettings settings;
+
 		
 		/*
 		 * Setting up action for the test
 		 */
 		public static void setup() {
-			
-			driver = new FirefoxDriver();
+
+			System.setProperty("webdriver.chrome.driver", "C:\\Dev\\selenium-2.42.2\\chromedriver.exe");
+		    // To remove message "You are using an unsupported command-line flag: --ignore-certificate-errors.
+		    // Stability and security will suffer."
+
+		    DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+		    ChromeOptions options = new ChromeOptions();
+		    options.addArguments("test-type");
+		    capabilities.setCapability("chrome.binary","C:\\Dev\\selenium-2.42.2\\chromedriver.exe");
+		    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			driver = new ChromeDriver(capabilities);
+			//for firefox
+			//driver = new FirefoxDriver();
 			driver.get(URL + "niku/nu");
 						
 		}
@@ -66,7 +83,8 @@ public class SeleniumTestHelper {
 	}
 	/**
 	 *Mocks Clarity Project and returns clarity project id 5 million number given
-	 */
+	 *for testing purposes
+	 *	 */
 	public static int createProject(int CID) {
 		return CID;
 		
@@ -78,8 +96,7 @@ public class SeleniumTestHelper {
 
 		WebElement  element;
 
-		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
-				.presenceOfElementLocated(By.id("ppm_nav_app_menu")));
+		//element = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.id("ppm_nav_app_menu")));
 
 		driver.get(URL
 				+ "niku/nu#action:projmgr.projectNew&partition_code=NIKU.ROOT&from=Work");
@@ -97,17 +114,18 @@ public class SeleniumTestHelper {
 		element = (new WebDriverWait(driver, 30)).until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("button[onclick*='retmode=properties']")));
 
-//		element = driver.findElement(By
-//				.cssSelector("button[onclick*='retmode=properties']"));
-//
 		element.click();
 		
 		
 	
-
+		//verify save worked by checking for "linked to agile" checkbox
 		element = (new WebDriverWait(driver, 10)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("agile_linked")));
+		
+		//get clarity 5000000 by parsing url
 		int CID = Integer.parseInt(driver.getCurrentUrl().replaceFirst(URL, "").substring(44));
+		
+		
 		element.click();
 		
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
@@ -115,6 +133,7 @@ public class SeleniumTestHelper {
 
 
 		element.click();
+		//verify return to projects page
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("h1[title*='Projects']")));
 		return CID;
@@ -127,11 +146,8 @@ public class SeleniumTestHelper {
 	public static String VerifyEID(int CID) {
 		
 		WebElement element;
-		int Cid = CID;
 		driver.get(URL
-				+ "niku/nu#action:projmgr.projectProperties&odf_view=project.versionone&id=" + Cid + "&odf_pk=" + Cid);
-		
-		//element = (new WebDriverWait(driver, 20)).until(ExpectedConditions.presenceOfElementLocated(By.className("ppm_read_only_value")));
+				+ "niku/nu#action:projmgr.projectProperties&odf_view=project.versionone&id=" + CID + "&odf_pk=" + CID);
 		
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.xpath("//div[4]/table/tbody/tr/td/table/tbody/tr/td[2]/span")));
@@ -142,7 +158,7 @@ public class SeleniumTestHelper {
 	
 	}
 	/**
-	 *mock for Clarity remote project sync and returns V1 EID
+	 *runs Clarity remote project sync and returns V1 EID
 	 *accepts job type  parameters:
 	 *"project" for remote project sync
 	 *"timesheet" for remote timesheet sync
@@ -161,10 +177,12 @@ public class SeleniumTestHelper {
 			id = "5000029";
 			delay = 15000;
 		}
-
+		// open specific job page
 		driver.get(URL
 				+ "niku/nu#action:nmc.jobPropertiesNew&job_definition_id="+id);
 
+		
+		//enter versionone in parameter and click run
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.name("remote_api_code")));
 
@@ -175,6 +193,7 @@ public class SeleniumTestHelper {
 
 		element.click();
 		
+		//verify return to Scheduled Jobs screen
 		element = (new WebDriverWait(driver, 20)).until(ExpectedConditions
 				.presenceOfElementLocated(By.cssSelector("h1[title*='Scheduled Jobs']")));
 		try {
@@ -188,13 +207,17 @@ public class SeleniumTestHelper {
 	/**
 	 *Gets total hours for clarity user for this weeks timesheet
 	 *accepts resource name  parameter, defaults to "Agile, Andre" if none given
+	 *runs using todays date for timesheet search
 	 * @throws ParseException 
 	 */
 	public static float getResourceHours(String name) throws ParseException {
 		
 		WebElement element;
+		
 		if (name==null||name=="")
 			name = "Agile, Andre";
+		
+		//browse to timesheets with todays date prepopulated
 		Date todayDate = V1DateParser.getShortDateFromStringWithTime(DateTime.now().toString());
 		SeleniumTestHelper.driver
 				.get(SeleniumTestHelper.URL
@@ -202,19 +225,22 @@ public class SeleniumTestHelper {
 						+ V1DateParser.getShortDateStringFromDate(todayDate)
 						+ "&ff_to_date="
 						+ V1DateParser.getShortDateStringFromDate(todayDate));
-
+		
+		// click custom date range for todays date
 		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By
 						.cssSelector("input[class='radio'][value='userdefined']")));
 
 		element.click();
-
+		
+		//enter resource name
 		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By
 						.cssSelector("input[name='ff_res_name']")));
 
 		element.sendKeys(name);
-
+		
+		//apply filter
 		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("Button[name='applyFilter']")));
 
@@ -224,6 +250,8 @@ public class SeleniumTestHelper {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		//check total resource hours
 		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("td[column*='14']")));
 
@@ -232,13 +260,16 @@ public class SeleniumTestHelper {
 		
 	}
 	
+	/**
+	 * overload with andre's name
+	 */
 	public static float getResourceHours() throws ParseException {
 		return getResourceHours("Agile, Andre");
 	}
 	
 	
 	/**
-	 * open project team page and add andre agile
+	 * open project team page and add andre agile - clicks throough screens to add him
 	 */
 	public static void AddAndre(int CID) throws ParseException {
 		WebElement element;
@@ -275,6 +306,9 @@ public class SeleniumTestHelper {
 	}
 	}
 	
+	/**
+	 * C-l-o-s-e-   T-h-e   B-r-o-w-s-e-r
+	 */
 	public static void closeBrowser() {
 		// Close the browser
 		driver.quit();

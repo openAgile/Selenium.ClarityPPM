@@ -13,87 +13,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumTests {
 
-//	// @Ignore
-//	@Test
-//	public void TestProjectSetup() throws Exception {
-//
-//		// Notice that the remainder of the code relies on the interface,
-//
-//		// not the implementation.
-//		SeleniumTestHelper.setup();
-//
-//		// Login app
-//		SeleniumTestHelper.loginApp();
-//
-//		// create a new project
-//		int CID = SeleniumTestHelper.createProject();
-//
-//		// create a new project
-//		SeleniumTestHelper.runProjectSyncJob("project");
-//		String EID = SeleniumTestHelper.VerifyEID(CID);
-//		System.out.println("Parent V1 EID: " + EID + ", Parent Clarity ID: " + CID);
-//		Assert.assertTrue(EID.matches("E-\\d{5}"));
-//
-//		// close browser
-//		SeleniumTestHelper.closeBrowser();
-//
-//	}
 
-//	// @Ignore
-//	@Test
-//	public void TestWBS() throws Exception {
-//
-//		SeleniumTestHelper.setup();
-//
-//		// Login app
-//		SeleniumTestHelper.loginApp();
-//
-//		// create a new project
-//		int CID = SeleniumTestHelper.createProject();
-//
-//		// create a new project and get IDs
-//		SeleniumTestHelper.runProjectSyncJob("project");
-//
-//		String EID = SeleniumTestHelper.VerifyEID(CID);
-//		Assert.assertTrue(EID.matches("E-\\d{5}"));
-//		String OID = V1TestHelper.getAssetOID(SeleniumTestHelper.OURL, "Epic", EID);
-//
-//		// create child epic and sync it
-//		String childWorkitemName = "Test Child Story";
-//		V1TestHelper.createChildStory(SeleniumTestHelper.OURL, childWorkitemName, OID);
-//		SeleniumTestHelper.runProjectSyncJob("project");
-//
-//		// open project task page and click "show all" button to see all tasks
-//		SeleniumTestHelper.driver.get(SeleniumTestHelper.URL + "niku/nu#action:projmgr.keyTaskList&id=" + CID);
-//
-//		WebElement element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
-//				.until(ExpectedConditions.presenceOfElementLocated(By.id("page_projmgr.odfKeyTaskList_collapseFilter_action_img")));
-//
-//		element.click();
-//
-//		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
-//				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("button[onclick*='clearExpression=true']")));
-//
-//		element.click();
-//
-//		element = (new WebDriverWait(SeleniumTestHelper.driver, 10))
-//				.until(ExpectedConditions.presenceOfElementLocated(By.id("projmgr.taskProperties")));
-//		// assert there is a link element titled "test child epic" verifying
-//		// successful sync of child item back to clarity
-//		Assert.assertTrue(SeleniumTestHelper.driver.findElements(By.cssSelector("a[title*='" + childWorkitemName + "']")).size() > 0);
-//		
-//		// extra info
-//		System.out.println("Parent V1 EID: " + EID + ", Parent Clarity ID: " + CID + ", V1 story Asset ID: " + OID);
-//
-//		// assert there is a link element titled "test child epic" verifying
-//		// successful sync of child item back to clarity
-//		Assert.assertTrue(SeleniumTestHelper.driver.findElements(By.cssSelector("a[title*='" + childWorkitemName + "']")).size() > 0);
-//
-//	}
 
 	// @Ignore
 	@Test
-	public void TestTimesheet() throws Exception {
+	public void TestClarityIntegration() throws Exception {
 		WebElement element;
 		float workHours = 5;
 		SeleniumTestHelper.setup();
@@ -171,6 +95,8 @@ public class SeleniumTests {
 		// assert total hours equal to begining hours plus actual
 		Assert.assertTrue("params: " + finalHours + ", " + numHours + ", " + workHours, finalHours == numHours + workHours);
 
+		// close browser
+		//SeleniumTestHelper.closeBrowser();
 	}
 
 }
